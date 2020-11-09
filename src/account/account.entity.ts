@@ -1,5 +1,6 @@
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import * as bcrypt from 'bcrypt';
+import { v4 as uuid } from 'uuid';
 
 @Entity()
 export class Account {
@@ -21,7 +22,11 @@ export class Account {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     last_login: string;
 
+    @Column({ type: 'tinyint', default: 0 })
+    status: number;
+
     @BeforeInsert() async hashPassword() {
         this.password = await bcrypt.hash(this.password, 10);
+        this.verify_code = uuid();
     }
 }

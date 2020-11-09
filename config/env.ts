@@ -7,5 +7,6 @@ export default () => ({
         password: process.env.DATABASE_PASSWORD,
         dbname: process.env.DATABASE_NAME,
     },
-    jwtsecret: process.env.JWT_SECRET
+    jwtsecret: process.env.JWT_SECRET,
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4000',
 });
