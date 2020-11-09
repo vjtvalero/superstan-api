@@ -1,8 +1,8 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AccountService, TOKEN_SPLITTER } from './account.service';
 import { CreateAccountDto } from './account.dto';
-import { Account } from './account.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Account } from './account.entity';
 
 @Controller('account')
 export class AccountController {
@@ -35,8 +35,13 @@ export class AccountController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('find/:email')
-    async findOne(@Param() params: { email: string; }): Promise<Account> {
-        return await this.service.findOne(params.email);
+    @HttpCode(200)
+    @Post('check-session')
+    async checkSession(@Req() request): Promise<Account> {
+        const account = await this.service.findOne(request.user.email);
+        if (!account || !account.status) {
+            throw new UnauthorizedException();
+        }
+        return account;
     }
 }
