@@ -9,4 +9,9 @@ export default () => ({
     },
     jwtsecret: process.env.JWT_SECRET,
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4000',
+    senderEmail: {
+        address: process.env.EMAIL_ADDRESS,
+        password: process.env.EMAIL_PASSWORD
+    },
+    appName: process.env.APP_NAME
 });

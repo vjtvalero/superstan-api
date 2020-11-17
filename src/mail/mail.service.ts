@@ -8,26 +8,29 @@ export class MailService {
 
     async sendVerification(email: string, token: string): Promise<void> {
         try {
+            const senderEmail = this.configService.get('senderEmail.address');
+            const senderPassword = this.configService.get('senderEmail.password');
+            const appName = this.configService.get('appName');
             const transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
                 port: 465,
                 secure: true,
                 auth: {
-                    user: 'mail.superstan@gmail.com',
-                    pass: '4bbfebfd3c69',
+                    user: senderEmail,
+                    pass: senderPassword,
                 },
             });
 
             const confirmUrl = `${this.configService.get('frontendUrl')}/confirm-email?token=${token}`;
 
             const info = await transporter.sendMail({
-                from: '"Superstan" <mail.superstan@gmail.com>', // sender address
+                from: `"${appName}" <${senderEmail}>`, // sender address
                 to: email,
                 subject: "Confirm your email address",
                 html: `<center style="width:100%;background-color:#F7F7F7">
                         <div
                             style="font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;font-family:'Helvetica Neue',sans-serif">
-                            Please confirm your email address with <span class="il">Superstan</span>.
+                            Please confirm your email address with <span class="il">${appName}</span>.
                         </div>
                         <div
                             style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;font-family:'Helvetica Neue',sans-serif">
@@ -69,7 +72,7 @@ export class MailService {
                                                                 style="margin-top:10px;margin-bottom:10px;margin-right:0;margin-left:0;font-size:20px;line-height:30px;color:#333333;font-weight:normal">
                                                                 Hi there,</h1>
                                                             <p style="font-size:16px;line-height:24px">Thank you for signing up to <span
-                                                                    class="il">Superstan</span>!</p>
+                                                                    class="il">${appName}</span>!</p>
                                                             <p style="font-size:16px;line-height:24px">In order to activate your account,
                                                                 you need to confirm your email address first. Click the link below to get
                                                                 started:</p>
@@ -84,7 +87,7 @@ export class MailService {
                                                                 questions, feel free to respond to this email.</p>
                                                             <p style="font-size:16px;line-height:24px">
                                                                 Best,<br>
-                                                                <span class="il">Superstan</span> team
+                                                                <span class="il">${appName}</span> team
                                                             </p>
                                                         </td>
                                                     </tr>
@@ -96,12 +99,12 @@ export class MailService {
                                         <td
                                             style="padding-top:30px;padding-bottom:30px;padding-right:50px;padding-left:50px;font-size:12px;line-height:18px;color:#1f7454;background-color:#FF2C5D;border-collapse:collapse;border-bottom-left-radius:8px;border-bottom-right-radius:8px;text-align:center">
                                             <span style="color:#ffffff">You're receiving this email because this email address was used to
-                                                create an account with us. If you did not make a <span class="il">Superstan</span> account,
+                                                create an account with us. If you did not make a <span class="il">${appName}</span> account,
                                                 feel free to ignore this message.</span><br>
                                             <br>
                                             <br>
                                             <span style="color:#ffffff;font-size:14px;line-height:21px"><span
-                                                    class="il">Superstan</span><br>
+                                                    class="il">${appName}</span><br>
                                                 Bonifacio Global City, Taguig, Philippines</span>
                                         </td>
                                     </tr>
